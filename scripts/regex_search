@@ -1,0 +1,108 @@
+#!/usr/bin/env python
+
+"""
+Loads a sequence and does a search with the supplied sequence. Lowercase letters are substituted as wildchards and a Regular Expression search is done.
+"""
+
+from Bio import SeqIO
+import re
+from sys import argv,stdout
+from getopt import getopt,GetoptError
+
+def print_usage():
+    print("Usage: regex_search [-r] <-s SEQUENCE | --sequence_file FILE> <input file> ")
+    print("Option:")
+    print("-f, --forward\t\t\tOnly do forward search")
+    print("-r, --revcomp\t\t\tOnly do reverse complement search")
+    print("-s, --sequence STRING\t\tSearch Sequence")
+    print("  , --sequence_file FILE\tSearch sequence fasta file.")
+    
+def crawl_sequence(search_seq,ref_seq,is_positive):
+    """
+    Does a regular expression search of the reference sequence, looking for instances of search_seq.
+    """
+    
+    fmt = "%s\t%d\t%d"
+    if is_positive:
+        fmt += "\t+"
+    else:
+        fmt += "\t-"
+                
+    for hit in re.finditer(search_seq,ref_seq):
+        (start,end) = (hit.start(),hit.end())
+        print(fmt % (hit.string[start:end],start,end))
+    
+    
+def seq2regex(seq):
+    """
+    Converts a sequence string to a regular expression query string. 
+    Lowercase characters are converted to wildcards.
+    """
+    
+    search_seq = ""
+    for i in seq:
+        if i.islower():
+            search_seq += "."
+        else:
+            search_seq += i
+    return search_seq
+    
+def get_sequences(filename):
+    """
+    Loads a fasta file of search sequences and returns an array with the sequences
+    """
+    retval = []# sequence list
+    
+    for rec in SeqIO.parse(filename,"fasta"):
+        retval.append(seq2regex(str(rec.seq)))
+    return retval
+    
+ # getopt
+short_opts = "fhrs:"
+long_opts = ["forward","help","revcomp","sequence=","sequence_file="]
+try:
+    (opts, args) = getopt(argv[1:],short_opts,long_opts)
+except GetoptError as goe:
+    print(goe.msg)
+    print('Run "regex_search --help" for options.')
+    exit(1)
+
+search_seqs = []
+should_revcomp = True
+should_forward_search = True
+for (opt,optarg) in opts:
+    while opt[0] == "-":
+        opt = opt[1:]
+    if opt in ["f","forward"]:
+        should_revcomp = False
+        should_forward_search = True
+    elif opt in ["h","help"]:
+        print_usage()
+        exit(0)
+    elif opt in ["r","revcomp"]:
+        should_revcomp = True
+        should_forward_search = False
+    elif opt in ["s","sequence"]:
+        search_seqs.append(seq2regex(optarg))
+    elif opt == "sequence_file":
+        search_seqs += get_sequences(optarg)
+    else:
+        print("Unknown flag: %s" % opt)
+        print('Run "regex_search --help" for options.')
+        exit(1)
+        
+if len(args) != 1:
+    print_usage()
+    exit(1)
+
+infile = open(args[0],"r")
+
+for rec in SeqIO.parse(infile,"fasta"):
+    rev_comp_str = None
+    for search_seq in search_seqs:
+        if should_forward_search:
+            crawl_sequence(search_seq,str(rec.seq),True)
+        if should_revcomp:
+            if not rev_comp_str:
+                rev_comp_str = str(rec.seq.reverse_complement())
+            crawl_sequence(search_seq,rev_comp_str,False)
