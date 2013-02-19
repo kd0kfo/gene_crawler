@@ -11,8 +11,8 @@ Installation
 
 Installation is as with other Python Packages
 
-python setup.py install
+    python setup.py install
 
 To specify a install location use the --prefix option
 
-python setup.py install --prefix=/home/user
+    python setup.py install --prefix=/home/user
