@@ -6,7 +6,6 @@ def extract_gene(f, output, start, length):
     """
     
     line_width = 70
-    write_counter = 0
     base_counter = 0
     curr_seg = ""
     for line in f:
