@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Loads a sequence and does a search with the supplied sequence. Lowercase letters are substituted as wildchards and a Regular Expression search is done.
+Loads a sequence and does a search with the supplied sequence. Lowercase letters are substituted as wildcards and a Regular Expression search is done.
 """
 
 from Bio import SeqIO
