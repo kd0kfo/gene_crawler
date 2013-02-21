@@ -37,23 +37,15 @@ def seq2regex(seq):
     """
     Converts a sequence string to a regular expression query string. 
     Lowercase characters are converted to wildcards.
+    R is converted to AG
+    Y is converted to CT
+    N is converted to wildcard
     """
     
     search_seq = ""
     for i in seq:
         if i.islower():
             search_seq += "."
-        else:
-            search_seq += i
-    return search_seq
-    
-def iupaclimited2regex(seq):
-    """
-    Converts a sequence string R, Y or N to a regular expression query string. 
-    """
-    
-    search_seq = ""
-    for i in seq:
         if i in "R":
             search_seq += "[AG]"
         if i in "Y":
@@ -63,7 +55,7 @@ def iupaclimited2regex(seq):
         else:
             search_seq += i
     return search_seq
-
+    
 
 def get_sequences(filename):
     """
