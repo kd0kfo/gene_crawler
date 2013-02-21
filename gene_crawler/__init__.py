@@ -44,6 +44,9 @@ class Gene():
         self.name = name
         self.synonym = synonym
         self.note = note
+        self.direction = "+"
+        if "complement" in loc:
+            self.direction = "-"
         
     def get_coords(self):
         """
@@ -90,7 +93,10 @@ def str2gene(string):
     retval = Gene()
     if len(tokens[0]):
         retval.loc = tokens[0]
-    retval.data = string
+    if "complement" in retval.loc:
+        retval.direction = "-"
+    else:
+        retval.direction = "+"
     
     name = extract_genedata("gene",string)
     if name:
