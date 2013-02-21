@@ -41,6 +41,14 @@ def seq2regex(seq):
     Lowercase characters are converted to wildcards.
     R is converted to AG
     Y is converted to CT
+    S is converted to GC
+    W is converted to AT
+    K is converted to GT
+    M is converted to AC
+    B is converted to CGT
+    D is converted to AGT
+    H is converted to ACT
+    V is converted to ACG
     N is converted to wildcard
     """
     
@@ -52,7 +60,23 @@ def seq2regex(seq):
             search_seq += "[AG]"
         if i in "Y":
             search_seq += "[CT]"
-        if i in "N":
+        if i in "S":
+	    search_seq += "[GC]"
+	if i in "W":
+	    search_seq += "[AT]"
+	if i in "K":
+	    search_seq += "[GT]"
+	if i in "M":
+	    search_seq += "[AC]"
+	if i in "B":
+	    search_seq += "[CGT]"
+	if i in "D":
+	    search_seq += "[AGT]"
+	if i in "H":
+	    search_seq += "[ACT]"
+	if i in "V":
+	    search_seq += "[ACG]"
+	if i in "N":
             search_seq += "."
         else:
             search_seq += i
