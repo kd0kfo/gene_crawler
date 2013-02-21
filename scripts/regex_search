@@ -47,6 +47,24 @@ def seq2regex(seq):
             search_seq += i
     return search_seq
     
+def iupaclimited2regex(seq):
+    """
+    Converts a sequence string R, Y or N to a regular expression query string. 
+    """
+    
+    search_seq = ""
+    for i in seq:
+        if i in "R":
+            search_seq += "[AG]"
+        if i in "Y":
+            search_seq += "[CT]"
+        if i in "N":
+            search_seq += "."
+        else:
+            search_seq += i
+    return search_seq
+
+
 def get_sequences(filename):
     """
     Loads a fasta file of search sequences and returns an array with the sequences
