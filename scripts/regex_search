@@ -50,7 +50,23 @@ def seq2regex(seq):
             search_seq += "[AG]"
         if i in "Y":
             search_seq += "[CT]"
-        if i in "N":
+        if i in "S":
+	    search_seq += "[GC]"
+	if i in "W":
+	    search_seq += "[AT]"
+	if i in "K":
+	    search_seq += "[GT]"
+	if i in "M":
+	    search_seq += "[AC]"
+	if i in "B":
+	    search_seq += "[CGT]"
+	if i in "D":
+	    search_seq += "[AGT]"
+	if i in "H":
+	    search_seq += "[ACT]"
+	if i in "V":
+	    search_seq += "[ACG]"
+	if i in "N":
             search_seq += "."
         else:
             search_seq += i
