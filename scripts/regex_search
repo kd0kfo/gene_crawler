@@ -39,6 +39,14 @@ def seq2regex(seq):
     Lowercase characters are converted to wildcards.
     R is converted to AG
     Y is converted to CT
+    S is converted to GC
+    W is converted to AT
+    K is converted to GT
+    M is converted to AC
+    B is converted to CGT
+    D is converted to AGT
+    H is converted to ACT
+    V is converted to ACG
     N is converted to wildcard
     """
     
