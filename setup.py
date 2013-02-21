@@ -2,7 +2,7 @@
 
 from distutils.core import setup, Extension
 
-the_scripts = ['scripts/gene_extractor','scripts/regex_search']
+the_scripts = ['scripts/gene_extractor','scripts/regex_search','scripts/gene_indexer']
 
 setup (name ='gene_crawler',
        version = '0.3',

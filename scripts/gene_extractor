@@ -8,6 +8,8 @@ DEFAULT_HEADER = ">GENE"
 HELP_WARNING_STRING = 'Run "gene_extractor --help" for a list of options.'
 
 def print_usage():
+    print("Given a start and end location or a gene name, the sequence is extracted from the given input file, with a buffer before and after the sequence.")
+    print("")
     print("Usage: gene_extractor [-g GENE:GBSFILE] [-b buffer] [-h header] [-s start loc] [-e end loc] [-o output] <input>")
     print("Options:")
     print("-b, --buffer INT\t\tSize of padding on both sides of gene. Default: %d" % DEFAULT_BUFFER)

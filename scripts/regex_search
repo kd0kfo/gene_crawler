@@ -10,6 +10,8 @@ from sys import argv,stdout
 from getopt import getopt,GetoptError
 
 def print_usage():
+    print("Search for a sequence or set of sequences in a given input file. Lowercase letters are treated as wildcards in the search.")
+    print("")
     print("Usage: regex_search [-r] <-s SEQUENCE | --sequence_file FILE> <input file> ")
     print("Option:")
     print("-f, --forward\t\t\tOnly do forward search")

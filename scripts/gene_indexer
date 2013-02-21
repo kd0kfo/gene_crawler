@@ -1,0 +1,59 @@
+#!/usr/bin/env python
+
+HELP_WARNING = "Run gene_indexer --help for options."
+
+def print_usage():
+	print("Produces a tab delimited list of genes in a given assembly GenBank file.")
+	print("")
+	print("Usage: gene_indexer <gbs file>")
+
+def print_gene(gene):
+	print("%s\t%s\t%s" % (gene.name,gene.get_coords(),gene.synonym))
+
+from getopt import getopt,GetoptError
+from sys import argv
+from gene_crawler import Assembly,str2gene
+
+short_opts = "h"
+long_opts = ["help"]
+
+try:
+	(opts,args) = getopt(argv[1:], short_opts, long_opts)
+except GetoptError as ge:
+	print(ge.msg)
+	print(HELP_WARNING)
+	exit(1)
+
+for opt in opts:
+	while opt[0] == '-':
+		opt = opt[1:]
+	if opt in ["h","help"]:
+		print_usage()
+		exit(0)
+	else:
+		print("Unknown option: %s" % opt)
+		print(HELP_WARNING)
+		exit(1)
+		
+if len(args) != 1:
+	print("Invalid number of arguments. Needs a GBS filename")
+	print(HELP_WARNING)
+	exit(1)
+	
+infilename = args[0]
+
+asmb = Assembly(infilename)
+asmb.open()
+gene_info = ""
+for (key,val) in asmb:
+	if not key:
+		if gene_info:
+			gene_info += " " + val
+		continue
+	if key == "gene":
+		if gene_info:
+			print_gene(str2gene(gene_info))
+		gene_info = val
+	elif gene_info:
+		print_gene(str2gene(gene_info))
+		gene_info = ""
