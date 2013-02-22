@@ -66,7 +66,7 @@ class Gene():
         if len(coords) != 2:
             raise FormatError("Invalid coordinate: '%s'" % self.loc)
         try:
-            return (int(coords[0]),int(coords[1]))
+            return (int(coords[0]) - 1,int(coords[1]) - 1) # GBS files, and therefore self.loc values, are one-indexed. Internally, we want to use zero-indexed values
         except ValueError as ve:
             print("Invalid coordinates: %s (%s)" % (locstr,coords))
             raise ve

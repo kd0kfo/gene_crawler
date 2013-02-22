@@ -43,7 +43,7 @@ def extract_gene():
     asmb = Assembly(CHRY_FILENAME)
     gene = asmb.get_gene(TEST_GENE)
     (start,end) = gene.get_coords()
-    print("Found %s at %s" % (gene.name,(start,end)))
+    print("Found %s at %s" % (gene.name,(start+1,end+1))) # human readable output = one-indexed
     chry_file = open(CHRY_FA_FILENAME,"r")
     for line in chry_file:
         if line.strip()[0] == ">":
