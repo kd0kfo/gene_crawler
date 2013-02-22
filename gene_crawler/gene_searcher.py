@@ -1,9 +1,17 @@
 
-def crawl_sequence(search_seq_name,search_seq,ref_seq,is_positive,filename=""):
+def crawl_sequence(search_seq_name,search_seq,ref_seq,is_positive,filename="", genomic_offset = 0):
     """
     Does a regular expression search of the reference sequence, looking for instances of search_seq.
+
+    Numbers printed are 1-index, as that is the expected index type that someone would use if they are
+    reading genomic data.
+    
+    genomic_offset is a number that may be added to the coordinates to translate the position within
+    the sequence to the position in the genome, if the sequence is a portion of the whole chromosome.
     """
     import re
+    
+    offset = len(ref_seq)
     
     fmt = search_seq_name + "\t%s\t%d\t%d"
     if is_positive:
@@ -13,8 +21,12 @@ def crawl_sequence(search_seq_name,search_seq,ref_seq,is_positive,filename=""):
     fmt  += "\t" + filename
                 
     for hit in re.finditer(search_seq,ref_seq):
-        (start,end) = (hit.start(),hit.end())
-        print(fmt % (hit.string[start:end],start,end))
+        (start, end) = (hit.start(), hit.end())
+        string_coords = (start, end)
+        if not is_positive:
+            (end,start) = (offset - start, offset - end)
+        (start,end) = (start + genomic_offset + 1, end + genomic_offset + 1)
+        print(fmt % (hit.string[string_coords[0]:string_coords[1]],start,end))
     
     
 def seq2regex(seq):
@@ -66,14 +78,15 @@ def seq2regex(seq):
     
 
 
-def search(infile, search_seqs,should_forward_search = True, should_revcomp = True):
+def search(infile, search_seqs,should_forward_search = True, should_revcomp = True, genomic_offset = 0):
     from Bio import SeqIO
     for rec in SeqIO.parse(infile,"fasta"):
         rev_comp_str = None
         for (search_seq_name,search_seq) in search_seqs:
             if should_forward_search:
-                crawl_sequence(search_seq_name,search_seq,str(rec.seq),True,infile.name)
+                crawl_sequence(search_seq_name,search_seq,str(rec.seq),True,infile.name,genomic_offset)
             if should_revcomp:
                 if not rev_comp_str:
                     rev_comp_str = str(rec.seq.reverse_complement())
-                crawl_sequence(search_seq_name,search_seq,rev_comp_str,False,infile.name)
+                crawl_sequence(search_seq_name,search_seq,rev_comp_str,False,infile.name,genomic_offset)
+                

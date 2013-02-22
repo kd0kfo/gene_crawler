@@ -49,14 +49,16 @@ def extract_gene():
         if line.strip()[0] == ">":
             break
     test_gene = open(GENE_EXTRACT,"w")
-    test_gene.write(">TEST GENE %s" % TEST_GENE)
+    test_gene.write(">TEST GENE %s\n" % TEST_GENE)
     GE.extract_gene(chry_file, test_gene, start, end-start)
     
-def find_sites():
+    return start
+    
+def find_sites(genomic_offset):
     from gene_crawler import gene_searcher
     
     print("Search Results:")
-    gene_searcher.search(open(GENE_EXTRACT,"r"),[("AP1a","TGACTCA"),("AP1b","TGAGTCA")])
+    gene_searcher.search(open(GENE_EXTRACT,"r"),[("AP1a","TGACTCA"), ("AP1b","TGAGTCA")],genomic_offset = genomic_offset)
     
     print("Expected Results:")
     print(open(CANONICAL_RESULTS,"r").read())
@@ -64,8 +66,8 @@ def find_sites():
 def run():
     setup()
     gunzip_chromosome()
-    extract_gene()
-    find_sites()
+    genomic_offset = extract_gene()
+    find_sites(genomic_offset)
         
 if __name__ == "__main__":
     run()

@@ -15,8 +15,8 @@ def print_usage():
     print("-b, --buffer INT\t\tSize of padding on both sides of gene. Default: %d" % DEFAULT_BUFFER)
     print("-g, --gbs GENE:FILE\t\tGene Name and GBS file to use to find gene coordinates, separated by a colon. Default: off")
     print("-h, --header STRING\tHeader to be added to extracted sequence. Default: \"%s\"" % DEFAULT_HEADER)
-    print("-s, --start INT\t\tStarting position of gene (zero indexed). Default: %d" % DEFAULT_START)
-    print("-e, --end INT\t\tEnd position of gene (zero indexed). Default: %d" % DEFAULT_END)
+    print("-s, --start INT\t\tStarting position of gene (one indexed). Default: %d" % DEFAULT_START)
+    print("-e, --end INT\t\tEnd position of gene (one indexed). Default: %d" % DEFAULT_END)
     print("-o, --output FILE\tOutput file. Default: Standard Output")
     
 def sanity_check(start_loc,end_loc,buffer_size,header):
@@ -59,7 +59,7 @@ if __name__ == "__main__":
         if opt in ["b","buffer"]:
             buffer_size = int(optarg)
         elif opt in ["e","end"]:
-            end_loc = int(optarg)
+            end_loc = int(optarg) - 1
         elif opt in ["g", "gbs"]:
             if not ":" in optarg:
                 print("Required gene name and gbs file name separated by a colon.")
@@ -75,7 +75,7 @@ if __name__ == "__main__":
         elif opt in ["o","output"]:
             output = open(optarg,"w")
         elif opt in ["s","start"]:
-            start_loc = int(optarg)
+            start_loc = int(optarg) - 1
         else:
             print("Unknown flag: %s" % opt)
             exit(1)
@@ -94,6 +94,8 @@ if __name__ == "__main__":
             (start_loc,end_loc) = gene.get_coords()
             if header == DEFAULT_HEADER:
                 header = ">%s|%dbp padding|%d..%d" % (gene_name,buffer_size,start_loc,end_loc)
+                start_loc -= 1
+                end_loc -= 1
         else:
             print("Could not find gene '%s' in '%s'" % (gene_name, gbs_filename))
             exit(1)
