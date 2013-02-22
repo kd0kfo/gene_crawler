@@ -30,9 +30,9 @@ def get_sequences(filename):
         retval.append((rec.id,gene_searcher.seq2regex(str(rec.seq))))
     return retval
     
- # getopt
-short_opts = "fhrs:"
-long_opts = ["forward","help","revcomp","sequence=","sequence_file="]
+# getopt
+short_opts = "fho:rs:"
+long_opts = ["forward","help","offset=","revcomp","sequence=","sequence_file="]
 try:
     (opts, args) = getopt(argv[1:],short_opts,long_opts)
 except GetoptError as goe:
@@ -40,6 +40,7 @@ except GetoptError as goe:
     print('Run "regex_search --help" for options.')
     exit(1)
 
+genomic_offset = 0 
 search_seqs = []
 should_revcomp = True
 should_forward_search = True
@@ -52,6 +53,8 @@ for (opt,optarg) in opts:
     elif opt in ["h","help"]:
         print_usage()
         exit(0)
+    elif opt in ["o","offset"]:
+        genomic_offset = int(optarg)
     elif opt in ["r","revcomp"]:
         should_revcomp = True
         should_forward_search = False
@@ -70,4 +73,4 @@ if len(args) != 1:
 
 infile = open(args[0],"r")
 
-gene_searcher.search(infile,search_seqs)
+gene_searcher.search(infile,search_seqs,genomic_offset=genomic_offset)

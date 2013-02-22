@@ -93,7 +93,7 @@ if __name__ == "__main__":
         if gene:
             (start_loc,end_loc) = gene.get_coords()
             if header == DEFAULT_HEADER:
-                header = ">%s|%dbp padding|%d..%d" % (gene_name,buffer_size,start_loc+1,end_loc+1) # This is human output. Therefore, show values as one-indexed.
+                header = ">%s|%dbp_padding|%d..%d" % (gene_name,buffer_size,start_loc+1,end_loc+1) # This is human output. Therefore, show values as one-indexed.
         else:
             print("Could not find gene '%s' in '%s'" % (gene_name, gbs_filename))
             exit(1)
