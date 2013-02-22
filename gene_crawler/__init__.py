@@ -44,6 +44,9 @@ class Gene():
         self.name = name
         self.synonym = synonym
         self.note = note
+        self.direction = "+"
+        if "complement" in loc:
+            self.direction = "-"
         
     def get_coords(self):
         """
@@ -63,7 +66,7 @@ class Gene():
         if len(coords) != 2:
             raise FormatError("Invalid coordinate: '%s'" % self.loc)
         try:
-            return (int(coords[0]),int(coords[1]))
+            return (int(coords[0]) - 1,int(coords[1]) - 1) # GBS files, and therefore self.loc values, are one-indexed. Internally, we want to use zero-indexed values
         except ValueError as ve:
             print("Invalid coordinates: %s (%s)" % (locstr,coords))
             raise ve
@@ -90,7 +93,10 @@ def str2gene(string):
     retval = Gene()
     if len(tokens[0]):
         retval.loc = tokens[0]
-    retval.data = string
+    if "complement" in retval.loc:
+        retval.direction = "-"
+    else:
+        retval.direction = "+"
     
     name = extract_genedata("gene",string)
     if name:

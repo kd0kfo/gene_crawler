@@ -8,7 +8,10 @@ def print_usage():
 	print("Usage: gene_indexer <gbs file>")
 
 def print_gene(gene):
-	print("%s\t%s\t%s" % (gene.name,gene.get_coords(),gene.synonym))
+	gene_loc = list(gene.get_coords())
+	for i in [0,1]:
+		gene_loc[i] += 1
+	print("%s\t(%d,%d)\t\t%s\t%s" % (gene.name,gene_loc[0],gene_loc[1],gene.direction,gene.synonym))
 
 from getopt import getopt,GetoptError
 from sys import argv
@@ -24,7 +27,7 @@ except GetoptError as ge:
 	print(HELP_WARNING)
 	exit(1)
 
-for opt in opts:
+for (opt,optarg) in opts:
 	while opt[0] == '-':
 		opt = opt[1:]
 	if opt in ["h","help"]:
