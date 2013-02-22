@@ -16,7 +16,7 @@ def print_usage():
     print("Option:")
     print("-f, --forward\t\t\tOnly do forward search")
     print("-r, --revcomp\t\t\tOnly do reverse complement search")
-    print("-s, --sequence STRING\t\tSearch Sequence")
+    print("-s, --sequence STRING\t\tSearch Sequence string, not file")
     print("  , --sequence_file FILE\tSearch sequence fasta file.")
     
 
