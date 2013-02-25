@@ -63,30 +63,31 @@ def seq2regex(seq):
     for i in seq:
         if i.islower():
             search_seq += "."
-        if i in "R":
+        elif i in "R":
             search_seq += "[AG]"
-        if i in "Y":
+        elif i in "Y":
             search_seq += "[CT]"
-        if i in "S":
+        elif i in "S":
             search_seq += "[GC]"
-        if i in "W":
+        elif i in "W":
             search_seq += "[AT]"
-        if i in "K":
+        elif i in "K":
             search_seq += "[GT]"
-        if i in "M":
+        elif i in "M":
             search_seq += "[AC]"
-        if i in "B":
+        elif i in "B":
             search_seq += "[CGT]"
-        if i in "D":
+        elif i in "D":
             search_seq += "[AGT]"
-        if i in "H":
+        elif i in "H":
             search_seq += "[ACT]"
-        if i in "V":
+        elif i in "V":
             search_seq += "[ACG]"
-        if i in "N":
+        elif i in "N":
             search_seq += "."
         else:
             search_seq += i
+    
     return search_seq
     
 def get_genome_offset(_string):
