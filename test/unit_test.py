@@ -67,7 +67,7 @@ def run():
     setup()
     gunzip_chromosome()
     genomic_offset = extract_gene()
-    find_sites(genomic_offset)
+    find_sites(genomic_offset + 1) # the function assume the *user* supplied the offset, thus it is one-indexed
         
 if __name__ == "__main__":
     run()
