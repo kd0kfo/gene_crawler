@@ -5,7 +5,7 @@ Loads a sequence and does a search with the supplied sequence. Lowercase letters
 """
 
 from Bio import SeqIO
-from sys import argv
+from sys import argv,stdout
 from getopt import getopt,GetoptError
 from gene_crawler import gene_searcher
 
@@ -15,6 +15,8 @@ def print_usage():
     print("Usage: regex_search [-r] <-s SEQUENCE | --sequence_file FILE> <input file> ")
     print("Option:")
     print("-f, --forward\t\t\tOnly do forward search")
+    print("  , --offset\t\tSpecifies a starting point in a sequence from which to begin the search.")
+    print("-o, --output\t\tOutput file. Default: Standard Output")
     print("-r, --revcomp\t\t\tOnly do reverse complement search")
     print("-s, --sequence STRING\t\tSearch Sequence string, not file")
     print("  , --sequence_file FILE\tSearch sequence fasta file.")
@@ -32,7 +34,7 @@ def get_sequences(filename):
     
 # getopt
 short_opts = "fho:rs:"
-long_opts = ["forward","help","offset=","revcomp","sequence=","sequence_file="]
+long_opts = ["forward","help","offset=","output=","revcomp","sequence=","sequence_file="]
 try:
     (opts, args) = getopt(argv[1:],short_opts,long_opts)
 except GetoptError as goe:
@@ -40,6 +42,7 @@ except GetoptError as goe:
     print('Run "regex_search --help" for options.')
     exit(1)
 
+output = stdout
 genomic_offset = 0 
 search_seqs = []
 should_revcomp = True
@@ -53,8 +56,10 @@ for (opt,optarg) in opts:
     elif opt in ["h","help"]:
         print_usage()
         exit(0)
-    elif opt in ["o","offset"]:
+    elif opt == "offset":
         genomic_offset = int(optarg)
+    elif opt in ["o","output"]:
+        output = open(optarg,"w")
     elif opt in ["r","revcomp"]:
         should_revcomp = True
         should_forward_search = False
@@ -73,4 +78,4 @@ if len(args) != 1:
 
 infile = open(args[0],"r")
 
-gene_searcher.search(infile,search_seqs,genomic_offset=genomic_offset)
+gene_searcher.search(infile,search_seqs,genomic_offset=genomic_offset,output=output)

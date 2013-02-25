@@ -1,5 +1,5 @@
 
-def crawl_sequence(search_seq_name,search_seq,ref_seq,is_positive,filename="", genomic_offset = 0):
+def crawl_sequence(search_seq_name,search_seq,ref_seq,is_positive,filename="", genomic_offset = 0, output = None):
     """
     Does a regular expression search of the reference sequence, looking for instances of search_seq.
 
@@ -10,6 +10,10 @@ def crawl_sequence(search_seq_name,search_seq,ref_seq,is_positive,filename="", g
     the sequence to the position in the genome, if the sequence is a portion of the whole chromosome.
     """
     import re
+    
+    if not output:
+        from sys import stdout
+        output = stdout
     
     offset = len(ref_seq)
     
@@ -34,7 +38,8 @@ def crawl_sequence(search_seq_name,search_seq,ref_seq,is_positive,filename="", g
             start += 1
             end += 1
         
-        print(fmt % (hit.string[string_coords[0]:string_coords[1]],start,end))
+        output.write(fmt % (hit.string[string_coords[0]:string_coords[1]],start,end))
+        output.write("\n")
     
     
 def seq2regex(seq):
@@ -110,7 +115,7 @@ def get_genome_offset(_string):
         
     
     
-def search(infile, search_seqs,should_forward_search = True, should_revcomp = True, genomic_offset = 0):
+def search(infile, search_seqs,should_forward_search = True, should_revcomp = True, genomic_offset = 0, output = None):
     """
     Searches Gene sequences for instances of each target sequences in the search_seqs list.
     
@@ -130,9 +135,9 @@ def search(infile, search_seqs,should_forward_search = True, should_revcomp = Tr
         rev_comp_str = None
         for (search_seq_name,search_seq) in search_seqs:
             if should_forward_search:
-                crawl_sequence(search_seq_name,search_seq,str(rec.seq),True,infile.name,sequence_offset)
+                crawl_sequence(search_seq_name,search_seq,str(rec.seq),True,infile.name,sequence_offset,output)
             if should_revcomp:
                 if not rev_comp_str:
                     rev_comp_str = str(rec.seq.reverse_complement())
-                crawl_sequence(search_seq_name,search_seq,rev_comp_str,False,infile.name,sequence_offset)
+                crawl_sequence(search_seq_name,search_seq,rev_comp_str,False,infile.name,sequence_offset,output)
                 
