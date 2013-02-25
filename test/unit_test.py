@@ -58,7 +58,8 @@ def find_sites(genomic_offset):
     from gene_crawler import gene_searcher
     
     print("Search Results:")
-    gene_searcher.search(open(GENE_EXTRACT,"r"),[("AP1a","TGACTCA"), ("AP1b","TGAGTCA")],genomic_offset = genomic_offset)
+    gene_searcher.search(open(GENE_EXTRACT,"r"),[("AP1a","TGACTCA"), ("AP1b","TGAGTCA")],genomic_offset = genomic_offset,output=open(GENE_EXTRACT + ".test","w"))
+    print(open(GENE_EXTRACT + ".test","r").read())
     
     print("Expected Results:")
     print(open(CANONICAL_RESULTS,"r").read())
