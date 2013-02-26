@@ -130,8 +130,10 @@ def search(infile, search_seqs,should_forward_search = True, should_revcomp = Tr
     from Bio import SeqIO
     for rec in SeqIO.parse(infile,"fasta"):
         sequence_offset = genomic_offset
-        if genomic_offset == -1:
+        if isinstance(genomic_offset,str) and genomic_offset.lower() == "lookup":
             sequence_offset = get_genome_offset(rec.id)
+        else:
+            sequence_offset = int(sequence_offset)
                 
         rev_comp_str = None
         for (search_seq_name,search_seq) in search_seqs:

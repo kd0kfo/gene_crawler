@@ -57,7 +57,7 @@ for (opt,optarg) in opts:
         print_usage()
         exit(0)
     elif opt == "offset":
-        genomic_offset = int(optarg)
+        genomic_offset = optarg
     elif opt in ["o","output"]:
         output = open(optarg,"w")
     elif opt in ["r","revcomp"]:
