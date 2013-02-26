@@ -34,9 +34,6 @@ def crawl_sequence(search_seq_name,search_seq,ref_seq,is_positive,filename="", g
         if genomic_offset != 0:
             start += genomic_offset
             end += genomic_offset
-        else:
-            start += 1
-            end += 1
         
         output.write(fmt % (hit.string[string_coords[0]:string_coords[1]],start,end))
         output.write("\n")
@@ -133,7 +130,7 @@ def search(infile, search_seqs,should_forward_search = True, should_revcomp = Tr
         if isinstance(genomic_offset,str) and genomic_offset.lower() == "lookup":
             sequence_offset = get_genome_offset(rec.id)
         else:
-            sequence_offset = int(sequence_offset)
+            sequence_offset = int(sequence_offset) + 1
                 
         rev_comp_str = None
         for (search_seq_name,search_seq) in search_seqs:
