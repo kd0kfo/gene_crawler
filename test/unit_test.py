@@ -64,7 +64,32 @@ def find_sites(genomic_offset):
     print("Expected Results:")
     print(open(CANONICAL_RESULTS,"r").read())
     
+def test_gene_indexer():
+    from gene_crawler import crawl_genes,write_gene
+    import StringIO as SIO
+    from os.path import join
+    canonical = open(join("test","indexer.out.expected"),"r")
+    genes = crawl_genes(join("test","test.gbs"))
+    
+    buf = SIO.StringIO()
+    for gene in genes:
+        write_gene(gene,buf)
+    buf.seek(0)
+    if buf.read() == canonical.read():
+        print("Gene Indexer test passed")
+        return
+    
+    buf.seek(0)
+    canonical.seek(0)
+    print("Expected:")
+    print(canonical.read())
+    print("Produced:")
+    print(buf.read())
+    raise Exception("Gene Indexter test failed")
+    
+    
 def run():
+    test_gene_indexer()
     setup()
     gunzip_chromosome()
     genomic_offset = extract_gene()
