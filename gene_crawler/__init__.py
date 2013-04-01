@@ -39,12 +39,13 @@ class Gene():
     
     Stores Gene data.
     """
-    def __init__(self,loc = "", name = "", synonym = "",note=""):
+    def __init__(self,loc = "", name = "", synonym = "",note="", db_xref = []):
         self.loc = loc
         self.name = name
         self.synonym = synonym
         self.note = note
         self.direction = "+"
+        self.db_xref = db_xref
         if "complement" in loc:
             self.direction = "-"
         
@@ -77,10 +78,8 @@ def extract_genedata(datatype,geneinfo):
     """
     import re
     
-    match = re.search(r"%s=\"([^\"]*)\"" % datatype,geneinfo)
-    if match and match.groups():
-        return match.groups()
-    return None 
+    match = re.findall(r"%s=\"([^\"]*)\"" % datatype,geneinfo)
+    return match 
 
 def str2gene(string):
     """
@@ -110,6 +109,10 @@ def str2gene(string):
     if synonym:
         retval.synonym = synonym[0]
         
+    db_xref = extract_genedata("db_xref",string)
+    if db_xref:
+        retval.db_xref = db_xref
+            
     return retval
 
 class Assembly():

@@ -7,19 +7,22 @@ def print_usage():
 	print("")
 	print("Usage: gene_indexer <gbs file>")
 
-def print_gene(gene):
+def print_gene(gene,outfile = None):
+	if not outfile:
+		from sys import stdout
+		outfile = stdout
 	gene_loc = list(gene.get_coords())
 	for i in [0,1]:
 		gene_loc[i] += 1
-	print("%s\t(%d,%d)\t\t%s\t%s" % (gene.name,gene_loc[0],gene_loc[1],gene.direction,gene.synonym))
+	outfile.write("%s\t(%d,%d)\t\t%s\t%s\t%s\n" % (gene.name,gene_loc[0],gene_loc[1],gene.direction,gene.synonym,",".join(gene.db_xref)))
 
 from getopt import getopt,GetoptError
-from sys import argv
+from sys import argv,stdout
 from gene_crawler import Assembly,str2gene
 
-short_opts = "h"
-long_opts = ["help"]
-
+short_opts = "ho:"
+long_opts = ["help","output="]
+output = stdout
 try:
 	(opts,args) = getopt(argv[1:], short_opts, long_opts)
 except GetoptError as ge:
@@ -33,6 +36,8 @@ for (opt,optarg) in opts:
 	if opt in ["h","help"]:
 		print_usage()
 		exit(0)
+	elif opt in ["o","output"]:
+		output = open(optarg,"w")
 	else:
 		print("Unknown option: %s" % opt)
 		print(HELP_WARNING)
@@ -55,8 +60,8 @@ for (key,val) in asmb:
 		continue
 	if key == "gene":
 		if gene_info:
-			print_gene(str2gene(gene_info))
+			print_gene(str2gene(gene_info),output)
 		gene_info = val
 	elif gene_info:
-		print_gene(str2gene(gene_info))
+		print_gene(str2gene(gene_info),output)
 		gene_info = ""
