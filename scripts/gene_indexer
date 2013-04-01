@@ -7,18 +7,9 @@ def print_usage():
 	print("")
 	print("Usage: gene_indexer <gbs file>")
 
-def print_gene(gene,outfile = None):
-	if not outfile:
-		from sys import stdout
-		outfile = stdout
-	gene_loc = list(gene.get_coords())
-	for i in [0,1]:
-		gene_loc[i] += 1
-	outfile.write("%s\t(%d,%d)\t\t%s\t%s\t%s\n" % (gene.name,gene_loc[0],gene_loc[1],gene.direction,gene.synonym,",".join(gene.db_xref)))
-
 from getopt import getopt,GetoptError
 from sys import argv,stdout
-from gene_crawler import Assembly,str2gene
+from gene_crawler import crawl_genes,write_gene
 
 short_opts = "ho:"
 long_opts = ["help","output="]
@@ -50,18 +41,7 @@ if len(args) != 1:
 	
 infilename = args[0]
 
-asmb = Assembly(infilename)
-asmb.open()
-gene_info = ""
-for (key,val) in asmb:
-	if not key:
-		if gene_info:
-			gene_info += " " + val
-		continue
-	if key == "gene":
-		if gene_info:
-			print_gene(str2gene(gene_info),output)
-		gene_info = val
-	elif gene_info:
-		print_gene(str2gene(gene_info),output)
-		gene_info = ""
+genes = crawl_genes(infilename)
+
+for gene in genes:
+	write_gene(gene,output)

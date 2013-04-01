@@ -206,3 +206,31 @@ class Assembly():
         key = line[0:GBS_KEY_LEN].strip().lower()
         val = line[GBS_KEY_LEN:].strip()
         return (key, val)
+    
+def crawl_genes(infilename):
+    retval = []
+    asmb = Assembly(infilename)
+    asmb.open()
+    gene_info = ""
+    for (key,val) in asmb:
+        if not key:
+            if gene_info:
+                gene_info += " " + val
+            continue
+        if key == "gene":
+            if gene_info:
+                retval.append(str2gene(gene_info))
+            gene_info = val
+        elif gene_info:
+            retval.append(str2gene(gene_info))
+            gene_info = ""
+    return retval
+
+def write_gene(gene,outfile = None):
+    if not outfile:
+        from sys import stdout
+        outfile = stdout
+    gene_loc = list(gene.get_coords())
+    for i in [0,1]:
+        gene_loc[i] += 1
+    outfile.write("%s\t(%d,%d)\t\t%s\t%s\t%s\n" % (gene.name,gene_loc[0],gene_loc[1],gene.direction,gene.synonym,",".join(gene.db_xref)))
