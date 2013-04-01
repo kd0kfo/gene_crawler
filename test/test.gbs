@@ -1,0 +1,23 @@
+     gene            59354329..59358343
+                     /gene="WASH6P"
+                     /gene_synonym="CXYorf1; FAM39A; FLJ77647; WASH"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: Curated Genomic."
+                     /pseudo
+                     /db_xref="GeneID:653440"
+                     /db_xref="HGNC:31685"
+     gene            complement(59358332..59360854)
+                     /gene="DDX11L16"
+                     /gene_synonym="MGC75272"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: Curated Genomic."
+                     /pseudo
+                     /db_xref="GeneID:727856"
+                     /db_xref="HGNC:37115"
+     gene            complement(59361222..59361778)
+                     /gene="LOC100507426"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: GNOMON. Supporting evidence
+                     includes similarity to: 1 Protein"
+                     /pseudo
+                     /db_xref="GeneID:100507426"
