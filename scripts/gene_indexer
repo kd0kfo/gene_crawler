@@ -2,46 +2,48 @@
 
 HELP_WARNING = "Run gene_indexer --help for options."
 
-def print_usage():
-	print("Produces a tab delimited list of genes in a given assembly GenBank file.")
-	print("")
-	print("Usage: gene_indexer <gbs file>")
 
-from getopt import getopt,GetoptError
-from sys import argv,stdout
-from gene_crawler import crawl_genes,write_gene
+def print_usage():
+    print("Produces a tab delimited list of genes in a given assembly GenBank"
+          " file.")
+    print("")
+    print("Usage: gene_indexer <gbs file>")
+
+from getopt import getopt, GetoptError
+from sys import argv, stdout
+from gene_crawler import crawl_genes, write_gene
 
 short_opts = "ho:"
-long_opts = ["help","output="]
+long_opts = ["help", "output="]
 output = stdout
 try:
-	(opts,args) = getopt(argv[1:], short_opts, long_opts)
+    (opts, args) = getopt(argv[1:], short_opts, long_opts)
 except GetoptError as ge:
-	print(ge.msg)
-	print(HELP_WARNING)
-	exit(1)
+    print(ge.msg)
+    print(HELP_WARNING)
+    exit(1)
 
-for (opt,optarg) in opts:
-	while opt[0] == '-':
-		opt = opt[1:]
-	if opt in ["h","help"]:
-		print_usage()
-		exit(0)
-	elif opt in ["o","output"]:
-		output = open(optarg,"w")
-	else:
-		print("Unknown option: %s" % opt)
-		print(HELP_WARNING)
-		exit(1)
-		
+for (opt, optarg) in opts:
+    while opt[0] == '-':
+        opt = opt[1:]
+    if opt in ["h", "help"]:
+        print_usage()
+        exit(0)
+    elif opt in ["o", "output"]:
+        output = open(optarg, "w")
+    else:
+        print("Unknown option: %s" % opt)
+        print(HELP_WARNING)
+        exit(1)
+
 if len(args) != 1:
-	print("Invalid number of arguments. Needs a GBS filename")
-	print(HELP_WARNING)
-	exit(1)
-	
+    print("Invalid number of arguments. Needs a GBS filename")
+    print(HELP_WARNING)
+    exit(1)
+
 infilename = args[0]
 
 genes = crawl_genes(infilename)
 
 for gene in genes:
-	write_gene(gene,output)
+    write_gene(gene, output)\

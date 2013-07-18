@@ -2,6 +2,7 @@
 
 from distutils.core import setup, Command
 
+
 class Tester(Command):
     user_options = []
 
@@ -16,16 +17,17 @@ class Tester(Command):
         from test import unit_test
         unit_test.run()
 
-the_scripts = ['scripts/gene_extractor','scripts/regex_search','scripts/gene_indexer']
+the_scripts = ['scripts/gene_extractor', 'scripts/regex_search',
+               'scripts/gene_indexer']
 
-setup (name ='gene_crawler',
-       version = '0.3',
-       url = 'http://code.davecoss.com',
-       license = 'GPL v3',
-       description = 'Utility functions for searching and manipulating gene data',
+setup(name='gene_crawler',
+       version='0.3',
+       url='http://code.davecoss.com',
+       license='GPL v3',
+       description=('Utility functions for searching and manipulating'
+                    ' gene data'),
        author_email='David.Coss@stjude.org',
-       packages = ['gene_crawler'],
-       scripts = the_scripts,
-       cmdclass ={'test':Tester}
+       packages=['gene_crawler'],
+       scripts=the_scripts,
+       cmdclass={'test': Tester}
        )
-

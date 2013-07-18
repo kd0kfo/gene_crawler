@@ -7,33 +7,45 @@ DEFAULT_BUFFER = 0
 DEFAULT_HEADER = ">GENE"
 HELP_WARNING_STRING = 'Run "gene_extractor --help" for a list of options.'
 
+
 def print_usage():
-    print("Given a start and end location or a gene name, the sequence is extracted from the given input file, with a buffer before and after the sequence.")
+    print("Given a start and end location or a gene name, the sequence is"
+          " extracted from the given input file, with a buffer"
+          " before and after the sequence.")
     print("")
-    print("Usage: gene_extractor [-g GENE:GBSFILE] [-b buffer] [-h header] [-s start loc] [-e end loc] [-o output] <input>")
+    print("Usage: gene_extractor [-g GENE:GBSFILE] [-b buffer] [-h header]"
+          " [-s start loc] [-e end loc] [-o output] <input>")
     print("Options:")
-    print("-b, --buffer INT\t\tSize of padding on both sides of gene. Default: %d" % DEFAULT_BUFFER)
-    print("-g, --gbs GENE:FILE\t\tGene Name and GBS file to use to find gene coordinates, separated by a colon. Default: off")
-    print("-h, --header STRING\tHeader to be added to extracted sequence. Default: \"%s\"" % DEFAULT_HEADER)
-    print("-s, --start INT\t\tStarting position of gene (one indexed). Default: %d" % DEFAULT_START)
-    print("-e, --end INT\t\tEnd position of gene (one indexed). Default: %d" % DEFAULT_END)
+    print("-b, --buffer INT\t\tSize of padding on both sides of gene."
+          " Default: %d" % DEFAULT_BUFFER)
+    print("-g, --gbs GENE:FILE\t\tGene Name and GBS file to use to find gene"
+          " coordinates, separated by a colon. Default: off")
+    print("-h, --header STRING\tHeader to be added to extracted sequence."
+          " Default: \"%s\"" % DEFAULT_HEADER)
+    print("-s, --start INT\t\tStarting position of gene (one indexed)."
+          " Default: %d" % DEFAULT_START)
+    print("-e, --end INT\t\tEnd position of gene (one indexed)."
+          " Default: %d" % DEFAULT_END)
     print("-o, --output FILE\tOutput file. Default: Standard Output")
-    
-def sanity_check(start_loc,end_loc,buffer_size,header):
+
+
+def sanity_check(start_loc, end_loc, buffer_size, header):
     from sys import stderr
-    
+
     if start_loc < buffer_size:
-        stderr.write("WARNGING: Starting location (%d) is to low for buffer size. Truncating buffer on starting side by %d.\n" % (start_loc, buffer_size-start_loc))
-    
+        stderr.write("WARNGING: Starting location (%d) is to low for buffer"
+                     " size. Truncating buffer on starting side by %d.\n"
+                     % (start_loc, buffer_size - start_loc))
+
     if header[0] != '>':
         stderr.write("WARNING: header does not begin with a '>' character.\n")
-        
+
     return True
-    
+
 if __name__ == "__main__":
-    from sys import argv,stdout
-    from getopt import getopt,GetoptError
-    
+    from sys import argv, stdout
+    from getopt import getopt, GetoptError
+
     # defaults
     output = stdout
     start_loc = DEFAULT_START
@@ -42,78 +54,83 @@ if __name__ == "__main__":
     header = DEFAULT_HEADER
     gbs_filename = None
     gene_name = None
-    
+
     # getopt
     short_opts = "b:g:h:s:e:o:"
-    long_opts = ["buffer=", "end=","gbs=","header=","help", "output=","start="]
+    long_opts = ["buffer=", "end=", "gbs=", "header=", "help", "output=",
+                 "start="]
     try:
-        (opts, args) = getopt(argv[1:],short_opts,long_opts)
+        (opts, args) = getopt(argv[1:], short_opts, long_opts)
     except GetoptError as goe:
         print(goe.msg)
         print(HELP_WARNING_STRING)
         exit(1)
-        
+
     for (opt, optarg) in opts:
         while opt[0] == "-":
             opt = opt[1:]
-        if opt in ["b","buffer"]:
+        if opt in ["b", "buffer"]:
             buffer_size = int(optarg)
-        elif opt in ["e","end"]:
+        elif opt in ["e", "end"]:
             end_loc = int(optarg) - 1
         elif opt in ["g", "gbs"]:
             if not ":" in optarg:
-                print("Required gene name and gbs file name separated by a colon.")
+                print("Required gene name and gbs file name separated"
+                      " by a colon.")
                 print("Received: %s" % optarg)
                 print(HELP_WARNING_STRING)
                 exit(1)
-            (gene_name,gbs_filename) = optarg.split(":")
-        elif opt in ["h","header"]:
+            (gene_name, gbs_filename) = optarg.split(":")
+        elif opt in ["h", "header"]:
             header = optarg
         elif opt == "help":
             print_usage()
             exit(0)
-        elif opt in ["o","output"]:
-            output = open(optarg,"w")
-        elif opt in ["s","start"]:
+        elif opt in ["o", "output"]:
+            output = open(optarg, "w")
+        elif opt in ["s", "start"]:
             start_loc = int(optarg) - 1
         else:
             print("Unknown flag: %s" % opt)
             exit(1)
-    
+
     if len(args) != 1:
         print("Missing file name")
         print(HELP_WARNING_STRING)
         exit(1)
-        
+
     # If using GBS, get gene coordinates
     if gbs_filename and gene_name:
         from gene_crawler import Assembly
         asmb = Assembly(gbs_filename)
         gene = asmb.get_gene(gene_name)
         if gene:
-            (start_loc,end_loc) = gene.get_coords()
+            (start_loc, end_loc) = gene.get_coords()
             if header == DEFAULT_HEADER:
-                header = ">%s|%dbp_padding|%d..%d" % (gene_name,buffer_size,start_loc+1,end_loc+1) # This is human output. Therefore, show values as one-indexed.
+                # This is human output. Therefore, show values as one-indexed.
+                header = (">%s|%dbp_padding|%d..%d"
+                          % (gene_name, buffer_size,
+                             start_loc + 1, end_loc + 1))
         else:
-            print("Could not find gene '%s' in '%s'" % (gene_name, gbs_filename))
+            print("Could not find gene '%s' in '%s'"
+                  % (gene_name, gbs_filename))
             exit(1)
-            
 
-    if not sanity_check(start_loc,end_loc,buffer_size,header):
+    if not sanity_check(start_loc, end_loc, buffer_size, header):
         print("Sanity check failed. Check parameters.")
         exit(1)
-    
+
     if start_loc >= buffer_size:
         start_loc -= buffer_size
     else:
         start_loc = 0
-        
+
     end_loc += buffer_size
-        
-    infile = open(args[0],"r")
-            
+
+    infile = open(args[0], "r")
+
     for line in infile:
         if line.strip()[0] == ">":
             break
     output.write("%s\n" % header)
-    extract_gene(infile,output,start_loc,end_loc - start_loc)
+    extract_gene(infile, output, start_loc, end_loc - start_loc)
