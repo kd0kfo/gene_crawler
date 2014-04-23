@@ -46,4 +46,4 @@ infilename = args[0]
 genes = crawl_genes(infilename)
 
 for gene in genes:
-    write_gene(gene, output)\
+    write_gene(gene, output)
