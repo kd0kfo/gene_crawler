@@ -21,7 +21,7 @@ the_scripts = ['scripts/gene_extractor', 'scripts/regex_search',
                'scripts/gene_indexer']
 
 setup(name='gene_crawler',
-       version='0.3',
+       version='1.0',
        url='http://code.davecoss.com',
        license='GPL v3',
        description=('Utility functions for searching and manipulating'

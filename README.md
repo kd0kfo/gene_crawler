@@ -28,3 +28,8 @@ License
 
 Free use of this software is granted under the terms of the GNU General Public License version 3. This may be found in the LICENSE file or online at https://www.gnu.org/copyleft/gpl.html.
 
+Build Status
+------------
+
+[![Build Status](https://travis-ci.org/kd0kfo/gene_crawler.svg?branch=master)](https://travis-ci.org/kd0kfo/gene_crawler)
+
