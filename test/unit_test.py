@@ -1,6 +1,3 @@
-# Usage: gene_extractor -g RASSF4:assembly_files/hs_ref_GRCh37.p5_chr10.gbs \
-#    -o RASSF4.fa ../../genomes/hs/hs_ref_GRCh37.p5_chr10.fa
-
 CHRY_URL = ("ftp://ftp.ncbi.nlm.nih.gov/genomes/H_sapiens/ARCHIVE/BUILD.37.3/"
             "Assembled_chromosomes/gbs/hs_ref_GRCh37.p5_chrY.gbs.gz")
 CHRY_FA_URL = ("ftp://ftp.ncbi.nlm.nih.gov/genomes/H_sapiens/ARCHIVE/"
