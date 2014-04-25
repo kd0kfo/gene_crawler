@@ -11,7 +11,7 @@ Installation
 
 Ensuring that prerequisites are installed is easily done using pip. Simply run
 
-    pip install -r requirements.
+    pip install -r requirements.txt
     
 Otherwise, verify that all packages listed in the requirements.txt file are installed.
 
